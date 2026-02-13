@@ -1,9 +1,9 @@
 package core.basesyntax.transaction;
 
 public class FruitTransaction {
-  private Operation operation;
-  private String fruit;
-  private int quantity;
+    private Operation operation;
+    private String fruit;
+    private int quantity;
 
     public FruitTransaction(Operation operation, String fruit, int quantity) {
         this.operation = operation;
@@ -41,14 +41,14 @@ public class FruitTransaction {
     PURCHASE("p"),
     RETURN("r");
 
-    private String code;
+        private String code;
 
-    Operation(String code) {
-      this.code = code;
-    }
+        Operation(String code) {
+            this.code = code;
+        }
 
-    public String getCode() {
-      return code;
+        public String getCode() {
+            return code;
+        }
     }
-  }
 }
