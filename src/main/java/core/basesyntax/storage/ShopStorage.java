@@ -18,11 +18,7 @@ public class ShopStorage implements Storage {
     public Integer add(String fruit, Integer quantity) {
         // error or create new?
         if (!storage.containsKey(fruit)) {
-            if (create(fruit, quantity)) {
-                return quantity;
-            } else {
-                return null; // or throw Exception?
-            }
+            throw new IllegalArgumentException(fruit + " not exist in storage!");
         }
         Integer newValue = storage.get(fruit) + quantity;
         storage.put(fruit, newValue);
