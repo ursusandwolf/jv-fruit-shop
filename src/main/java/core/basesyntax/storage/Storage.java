@@ -4,7 +4,7 @@ public interface Storage {
 
     boolean create(String fruit, Integer quantity);
 
-    Integer update(String fruit, Integer quantity);
+    Integer add(String fruit, Integer quantity);
 
     boolean delete(String fruit);
 }

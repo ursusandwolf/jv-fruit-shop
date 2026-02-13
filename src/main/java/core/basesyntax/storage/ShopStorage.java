@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ShopStorage implements Storage {
-    private static final Map<String, Integer> storage = new HashMap<>();
+    private final Map<String, Integer> storage = new HashMap<>();
 
     public boolean create(String fruit, Integer quantity) {
         // null check? negative balance?
@@ -14,8 +14,8 @@ public class ShopStorage implements Storage {
         storage.put(fruit, quantity);
         return true;
     }
-
-    public Integer update(String fruit, Integer quantity) {
+    // add instead of update method
+    public Integer add(String fruit, Integer quantity) {
         // error or create new?
         if (!storage.containsKey(fruit)) {
             if (create(fruit, quantity)) {
