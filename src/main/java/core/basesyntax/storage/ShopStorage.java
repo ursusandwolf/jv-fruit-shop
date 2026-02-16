@@ -14,15 +14,21 @@ public class ShopStorage implements Storage {
         storage.put(fruit, quantity);
         return true;
     }
-    // add instead of update method
+
     public Integer add(String fruit, Integer quantity) {
-        // error or create new?
         if (!storage.containsKey(fruit)) {
             throw new IllegalArgumentException(fruit + " not exist in storage!");
         }
         Integer newValue = storage.get(fruit) + quantity;
-        storage.put(fruit, newValue);
-        return newValue;
+        return update(fruit, newValue);
+    }
+
+    public Integer update(String fruit, Integer setQuantity) {
+        if (!storage.containsKey(fruit)) {
+            throw new IllegalArgumentException(fruit + " not exist in storage!");
+        }
+        storage.put(fruit, setQuantity);
+        return setQuantity;
     }
 
     public boolean delete(String fruit) {
