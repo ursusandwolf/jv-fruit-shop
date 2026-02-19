@@ -61,14 +61,13 @@ public class FruitTransaction {
             }
         };
 
-        public abstract int apply(String fruit, int quantity);
-
         private final static Transaction transaction = new ShopTransaction();
-        private String code;
-
+        private final String code;
         Operation(String code) {
             this.code = code;
         }
+
+        public abstract int apply(String fruit, int quantity);
 
         public String getCode() {
             return code;

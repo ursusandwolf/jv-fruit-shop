@@ -3,8 +3,6 @@ package core.basesyntax.transaction;
 import core.basesyntax.storage.ShopStorage;
 import core.basesyntax.storage.Storage;
 
-import java.util.Map;
-
 public class ShopTransaction implements Transaction {
     private static final Storage storage = new ShopStorage();
     private static final String NULL_ARG_FORMAT = "Argument '%s' must not be null";
@@ -15,33 +13,6 @@ public class ShopTransaction implements Transaction {
             = "Failed to create item '%s' with value %d";
 
     public ShopTransaction() {
-    }
-
-    @Override
-    public Integer init(String item, Integer quantity) {
-        validate(item, quantity);
-         if (storage.create(item, quantity)) {
-            return quantity;
-         }
-        throw new IllegalStateException(
-                String.format(ERR_CREATE_FAILED_FORMAT, item, quantity));
-    }
-
-    @Override
-    public Integer get(String item) {
-        return storage.read(item);
-    }
-
-    @Override
-    public Integer add(String item, Integer quantity) {
-        validate(item, quantity);
-        return change(item, quantity);
-    }
-
-    @Override
-    public Integer substrate(String item, Integer quantity) {
-        validate(item, quantity);
-        return change(item, -1 * quantity);
     }
 
     private static int change(String item, Integer delta) {
@@ -71,6 +42,33 @@ public class ShopTransaction implements Transaction {
                     String.format(NEGATIVE_ARG_FORMAT, "quantity", quantity)
             );
         }
+    }
+
+    @Override
+    public Integer init(String item, Integer quantity) {
+        validate(item, quantity);
+        if (storage.create(item, quantity)) {
+            return quantity;
+        }
+        throw new IllegalStateException(
+                String.format(ERR_CREATE_FAILED_FORMAT, item, quantity));
+    }
+
+    @Override
+    public Integer get(String item) {
+        return storage.read(item);
+    }
+
+    @Override
+    public Integer add(String item, Integer quantity) {
+        validate(item, quantity);
+        return change(item, quantity);
+    }
+
+    @Override
+    public Integer substrate(String item, Integer quantity) {
+        validate(item, quantity);
+        return change(item, -1 * quantity);
     }
 
 }
