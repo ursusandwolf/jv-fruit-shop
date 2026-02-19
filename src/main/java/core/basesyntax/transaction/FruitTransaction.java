@@ -36,11 +36,34 @@ public class FruitTransaction {
     }
 
     public enum Operation {
-    BALANCE("b"),
-    SUPPLY("s"),
-    PURCHASE("p"),
-    RETURN("r");
+        BALANCE("b") {
+            @Override
+            public int apply(String fruit, int quantity) {
+                return transaction.init(fruit, quantity);
+            }
+        },
+        SUPPLY("s") {
+            @Override
+            public int apply(String fruit, int quantity) {
+                return transaction.add(fruit, quantity);
+            }
+        },
+        PURCHASE("p") {
+            @Override
+            public int apply(String fruit, int quantity) {
+                return transaction.substrate(fruit, quantity);
+            }
+        },
+        RETURN("r") {
+            @Override
+            public int apply(String fruit, int quantity) {
+                return transaction.add(fruit, quantity);
+            }
+        };
 
+        public abstract int apply(String fruit, int quantity);
+
+        private final static Transaction transaction = new ShopTransaction();
         private String code;
 
         Operation(String code) {

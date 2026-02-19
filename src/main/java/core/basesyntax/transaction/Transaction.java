@@ -1,7 +1,7 @@
 package core.basesyntax.transaction;
 
 public interface Transaction {
-    boolean init(String item, Integer quantity);
+    Integer init(String item, Integer quantity);
 
     Integer get(String item);
 
