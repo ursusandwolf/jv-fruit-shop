@@ -14,7 +14,8 @@ public class ShopStorage implements Storage {
         storage.put(fruit, quantity);
         return true;
     }
-    public Integer read (String key) {
+
+    public Integer read(String key) {
         return storage.get(key);
     }
 

@@ -3,17 +3,17 @@ package core.basesyntax.transaction;
 import core.basesyntax.storage.ShopStorage;
 import core.basesyntax.storage.Storage;
 
-import java.text.MessageFormat;
-
 public class ShopTransaction implements Transaction {
-    public static final String INVALID_DATA = "invalid data {0} {1}";
-    Storage storage = new ShopStorage();
+    private static final Storage storage = new ShopStorage();
+    private static final String NULL_ARG_FORMAT = "Argument '%s' must not be null";
+    private static final String NEGATIVE_ARG_FORMAT = "Argument '%s' must be >= 0, but was %d";
+    private static final String ERR_UPDATE_FAILED_FORMAT
+            = "Failed to update item '%s' with value %d";
+
     @Override
     public boolean init(String item, Integer quantity) {
-        if (isValid(item, quantity)) {
-            return storage.create(item, quantity);
-        }
-        return false;
+        validate(item, quantity);
+        return storage.create(item, quantity);
     }
 
     @Override
@@ -23,14 +23,15 @@ public class ShopTransaction implements Transaction {
 
     @Override
     public Integer add(String item, Integer quantity) {
-        if (isValid(item, quantity)) {
-            int lastValue = storage.read(item);
-            int newValue = lastValue + quantity;
-            if (storage.update(item, newValue)) {
-                return newValue;
-            }
+        validate(item, quantity);
+        int lastValue = storage.read(item);
+        int newValue = lastValue + quantity;
+        if (!storage.update(item, newValue)) {
+            throw new IllegalStateException(
+                    String.format(ERR_UPDATE_FAILED_FORMAT, item, newValue)
+            );
         }
-        return null;
+        return newValue;
     }
 
     @Override
@@ -38,10 +39,22 @@ public class ShopTransaction implements Transaction {
         return 0;
     }
 
-    private static boolean isValid(String item, Integer quantity) {
-        if (item != null && quantity != null && quantity >= 0) {
-            return true;
+    private static void validate(String item, Integer quantity) {
+        if (item == null) {
+            throw new IllegalArgumentException(
+                    String.format(NULL_ARG_FORMAT, "item")
+            );
         }
-        throw new RuntimeException (INVALID_DATA + item + quantity));
+        if (quantity == null) {
+            throw new IllegalArgumentException(
+                    String.format(NULL_ARG_FORMAT, "quantity")
+            );
+        }
+        if (quantity < 0) {
+            throw new IllegalArgumentException(
+                    String.format(NEGATIVE_ARG_FORMAT, "quantity", quantity)
+            );
+        }
     }
+
 }
