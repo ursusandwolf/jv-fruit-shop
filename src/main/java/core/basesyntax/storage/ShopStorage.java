@@ -6,26 +6,32 @@ import java.util.Map;
 public class ShopStorage implements Storage {
     private final Map<String, Integer> storage = new HashMap<>();
 
+    // accept any data, even null key and value
     public boolean create(String fruit, Integer quantity) {
-        // null check? negative balance?
         if (storage.containsKey(fruit)) {
             return false;
         }
         storage.put(fruit, quantity);
         return true;
     }
-    // add instead of update method
-    public Integer add(String fruit, Integer quantity) {
-        // error or create new?
+    public Integer read (String key) {
+        return storage.get(key);
+    }
+
+    // add or substrate in transaction layer
+    public boolean update(String fruit, Integer quantity) {
         if (!storage.containsKey(fruit)) {
             throw new IllegalArgumentException(fruit + " not exist in storage!");
         }
-        Integer newValue = storage.get(fruit) + quantity;
-        storage.put(fruit, newValue);
-        return newValue;
+        storage.put(fruit, quantity);
+        return true;
     }
 
     public boolean delete(String fruit) {
-        return false; // yet not working
+        if (!storage.containsKey(fruit)) {
+            throw new IllegalArgumentException(fruit + " not exist in storage!");
+        }
+        storage.remove(fruit);
+        return true;
     }
 }
