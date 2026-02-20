@@ -1,7 +1,7 @@
 package core.basesyntax.transaction;
 
-import core.basesyntax.storage.ShopStorage;
-import core.basesyntax.storage.Storage;
+import core.basesyntax.db.ShopStorage;
+import core.basesyntax.db.Storage;
 
 public class ShopTransaction implements Transaction {
     private static final Storage storage = new ShopStorage();
@@ -18,7 +18,7 @@ public class ShopTransaction implements Transaction {
     private static int change(String item, Integer delta) {
         int lastValue = storage.read(item);
         int newValue = lastValue + delta;
-        if (!storage.update(item, newValue)) {
+        if (newValue < 0 || !storage.update(item, newValue)) {
             throw new IllegalStateException(
                     String.format(ERR_UPDATE_FAILED_FORMAT, item, newValue)
             );
