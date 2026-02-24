@@ -2,6 +2,8 @@ package core.basesyntax;
 
 import core.basesyntax.parser.DataConverter;
 import core.basesyntax.parser.DataConverterImpl;
+import core.basesyntax.report.ReportGenerator;
+import core.basesyntax.report.ReportGeneratorImpl;
 import core.basesyntax.transaction.FruitTransaction;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,6 +31,8 @@ public class Main {
             tx.execute();
         }
         // 5.Generate report based on the current Storage state
+        ReportGenerator reportGenerator = new ReportGeneratorImpl();
+        String resultingReport = reportGenerator.getReport();
         // 6. Write the received report into the destination file
     }
 }
