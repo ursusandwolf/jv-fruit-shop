@@ -36,41 +36,30 @@ public class FruitTransaction {
     }
 
     public enum Operation {
-        BALANCE("b") {
-            @Override
-            public int apply(String fruit, int quantity) {
-                return transaction.init(fruit, quantity);
-            }
-        },
-        SUPPLY("s") {
-            @Override
-            public int apply(String fruit, int quantity) {
-                return transaction.add(fruit, quantity);
-            }
-        },
-        PURCHASE("p") {
-            @Override
-            public int apply(String fruit, int quantity) {
-                return transaction.substrate(fruit, quantity);
-            }
-        },
-        RETURN("r") {
-            @Override
-            public int apply(String fruit, int quantity) {
-                return transaction.add(fruit, quantity);
-            }
-        };
+        BALANCE("b"),
+        SUPPLY("s"),
+        PURCHASE("p"),
+        RETURN("r");
 
-        private final static Transaction transaction = new ShopTransaction();
         private final String code;
         Operation(String code) {
             this.code = code;
         }
 
-        public abstract int apply(String fruit, int quantity);
-
         public String getCode() {
             return code;
+        }
+
+        public static Operation fromCode(String code) {
+            if (code == null) {
+                throw new IllegalArgumentException("Operation code is null");
+            }
+            for (Operation op : Operation.values()) {
+                if (op.getCode().equalsIgnoreCase(code.trim())) {
+                    return op;
+                }
+            }
+            throw new IllegalArgumentException("Unknown operation code: " + code);
         }
     }
 }
