@@ -1,6 +1,21 @@
 package core.basesyntax.transaction;
 
+import core.basesyntax.transaction.handler.BalanceOperationHandler;
+import core.basesyntax.transaction.handler.OperationHandler;
+import core.basesyntax.transaction.handler.PurchaseOperationHandler;
+import core.basesyntax.transaction.handler.ReturnOperationHandler;
+import core.basesyntax.transaction.handler.SupplyOperationHandler;
+import java.util.Map;
+
 public class FruitTransaction {
+    private Map<Operation, OperationHandler> strategy = Map.of(
+            Operation.BALANCE, new BalanceOperationHandler(),
+            Operation.SUPPLY, new SupplyOperationHandler(),
+            Operation.PURCHASE, new PurchaseOperationHandler(),
+            Operation.RETURN, new ReturnOperationHandler()
+    );
+    private Transaction tx = new ShopTransaction();
+
     private Operation operation;
     private String fruit;
     private int quantity;
@@ -9,6 +24,11 @@ public class FruitTransaction {
         this.operation = operation;
         this.fruit = fruit;
         this.quantity = quantity;
+    }
+
+    public void execute() {
+        OperationHandler handler = strategy.get(operation);
+        handler.handle(this, tx);
     }
 
     public Operation getOperation() {
