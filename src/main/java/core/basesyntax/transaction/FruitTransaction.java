@@ -7,6 +7,9 @@ import core.basesyntax.transaction.handler.ReturnOperationHandler;
 import core.basesyntax.transaction.handler.SupplyOperationHandler;
 import java.util.Map;
 
+//TODO: Зробити FruitTransaction чистим POJO (без execute()/strategy/tx)
+// — прибрати залежності від handler/transaction.
+//TODO: Інжектити Operation через fromCode при парсингу, але не виконувати логіку в моделі.
 public class FruitTransaction {
     private Map<Operation, OperationHandler> strategy = Map.of(
             Operation.BALANCE, new BalanceOperationHandler(),
@@ -55,6 +58,8 @@ public class FruitTransaction {
         this.quantity = quantity;
     }
 
+//TODO: Зберегти лише код і public static Operation fromCode(String code) з trim() та ignoreCase;
+// кидати IllegalArgumentException для null/unknown.
     public enum Operation {
         BALANCE("b"),
         SUPPLY("s"),

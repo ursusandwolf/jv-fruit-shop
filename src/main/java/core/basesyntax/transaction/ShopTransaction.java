@@ -3,6 +3,13 @@ package core.basesyntax.transaction;
 import core.basesyntax.db.ShopStorage;
 import core.basesyntax.db.Storage;
 
+//TODO: Прибрати static Storage; інжектити Storage через конструктор.
+//TODO: В методі change/read перевіряти, що read(item) може повертати null
+// — обробляти відсутність ключа явною помилкою або ініціалізацією.
+//TODO: Використовувати конкретні виключення: IllegalArgumentException
+// для null/некоректних аргументів, IllegalStateException для бізнес-невідповідностей.
+//TODO: Валідувати параметри у create/update: fruit не null/не порожній,
+// quantity != null && >= 0.
 public class ShopTransaction implements Transaction {
     private static final Storage storage = new ShopStorage();
     private static final String NULL_ARG_FORMAT = "Argument '%s' must not be null";

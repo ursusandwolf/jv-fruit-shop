@@ -11,13 +11,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-/**
- * Feel free to remove this class and create your own.
- */
 public class Main {
-    // HINT: In the `public static void main(String[] args)` it is better to create
-    // instances of your classes,
-    // and call their methods, but do not write any business logic in the `main` method!
+//TODO: Використовувати Reader/Writer інтерфейси замість прямого Files/FileWriter;
+// закривати ресурси через try-with-resources.
+//TODO: Не читати жорстко "data.csv" — передавати шлях через args або конфігурацію.
+//TODO: Не кастити List<?> — змінити сигнатуру DataConverter на List<FruitTransaction>.
 
     public static void main(String[] arg) throws IOException {
         // 1. Read the data from the input CSV file
