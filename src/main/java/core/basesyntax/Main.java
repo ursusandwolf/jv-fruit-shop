@@ -5,6 +5,7 @@ import core.basesyntax.parser.DataConverterImpl;
 import core.basesyntax.report.ReportGenerator;
 import core.basesyntax.report.ReportGeneratorImpl;
 import core.basesyntax.transaction.FruitTransaction;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,8 +32,10 @@ public class Main {
             tx.execute();
         }
         // 5.Generate report based on the current Storage state
-        ReportGenerator reportGenerator = new ReportGeneratorImpl();
-        String resultingReport = reportGenerator.getReport();
+        ReportGenerator generator = new ReportGeneratorImpl();
+        String report = generator.getReport();
         // 6. Write the received report into the destination file
+        FileWriter fileWriter = new FileWriter("finalReport.csv");
+        fileWriter.write(report);
     }
 }
