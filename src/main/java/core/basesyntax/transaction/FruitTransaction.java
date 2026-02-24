@@ -20,8 +20,8 @@ public class FruitTransaction {
     private String fruit;
     private int quantity;
 
-    public FruitTransaction(Operation operation, String fruit, int quantity) {
-        this.operation = operation;
+    public FruitTransaction(String code, String fruit, int quantity) {
+        this.operation = Operation.fromCode(code);
         this.fruit = fruit;
         this.quantity = quantity;
     }
