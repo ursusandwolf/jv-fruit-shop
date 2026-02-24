@@ -1,7 +1,8 @@
 package core.basesyntax;
 
-import core.basesyntax.inout.Reader;
-
+import core.basesyntax.parser.DataConverter;
+import core.basesyntax.parser.DataConverterImpl;
+import core.basesyntax.transaction.FruitTransaction;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,8 +20,14 @@ public class Main {
         // 1. Read the data from the input CSV file
         List<String> lines = Files.readAllLines(Path.of("data.csv"));
         // 2. Convert the incoming data into FruitTransactions list
+        DataConverter converter = new DataConverterImpl();
+        List<FruitTransaction> transactions
+                = (List<FruitTransaction>) converter.convertToTransaction(lines);
         // 3. Create and feel the map with all OperationHandler implementations
         // 4. Process the incoming transactions with applicable OperationHandler implementations
+        for (FruitTransaction tx : transactions) {
+            tx.execute();
+        }
         // 5.Generate report based on the current Storage state
         // 6. Write the received report into the destination file
     }
