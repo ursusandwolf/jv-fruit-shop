@@ -34,32 +34,14 @@ public class FruitTransaction {
         handler.handle(this, tx);
     }
 
-    public Operation getOperation() {
-        return operation;
-    }
-
-    public void setOperation(Operation operation) {
-        this.operation = operation;
-    }
-
     public String getFruit() {
         return fruit;
-    }
-
-    public void setFruit(String fruit) {
-        this.fruit = fruit;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-//TODO: Зберегти лише код і public static Operation fromCode(String code) з trim() та ignoreCase;
-// кидати IllegalArgumentException для null/unknown.
     public enum Operation {
         BALANCE("b"),
         SUPPLY("s"),
@@ -76,14 +58,14 @@ public class FruitTransaction {
         }
 
         public static Operation fromCode(String code) {
-            if (code == null) {
-                throw new IllegalArgumentException("Operation code is null");
-            }
-            for (Operation op : Operation.values()) {
-                if (op.getCode().equalsIgnoreCase(code.trim())) {
-                    return op;
+            if (code != null) {
+                for (Operation op : Operation.values()) {
+                    if (op.getCode().equalsIgnoreCase(code.trim())) {
+                        return op;
+                    }
                 }
             }
+            //Unknown operation code: null
             throw new IllegalArgumentException("Unknown operation code: " + code);
         }
     }
