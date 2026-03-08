@@ -8,10 +8,6 @@ import java.util.Map;
 public class ShopStorage implements Storage {
     private final Map<String, Integer> storage = new HashMap<>();
 
-    //TODO: Розглянути повернення boolean у update/delete замість кидання IllegalArgumentException
-    // при відсутності ключа (визначити контракт і задокументувати).
-    //TODO: read повинен або повертати Integer (може бути null) та документувати поведінку,
-    // або повертати 0 за замовчуванням — вибрати й дотримуватися.
     public boolean create(String fruit, Integer quantity) {
         validate(fruit, quantity);
         if (storage.containsKey(fruit)) {
