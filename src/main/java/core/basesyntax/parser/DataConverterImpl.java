@@ -14,10 +14,10 @@ public class DataConverterImpl implements DataConverter {
             String[] split = s.trim().split(",");
             String code = split[0].trim();
             String fruit = split[1].trim();
-            Integer q = Integer.parseInt(split[2].trim());
             if ("type".equalsIgnoreCase(code)) {
                 continue; // skip header
             }
+            Integer q = Integer.parseInt(split[2].trim());
             transactions.add(new FruitTransaction(code, fruit, q));
         }
         return transactions;
