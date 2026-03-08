@@ -1,9 +1,9 @@
 package core.basesyntax.db;
 
+import static core.basesyntax.transaction.Validator.validate;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import static core.basesyntax.transaction.Validator.validate;
 
 public class ShopStorage implements Storage {
     private final Map<String, Integer> storage = new HashMap<>();

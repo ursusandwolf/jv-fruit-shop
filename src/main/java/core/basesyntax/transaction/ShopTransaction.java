@@ -1,9 +1,9 @@
 package core.basesyntax.transaction;
 
+import static core.basesyntax.transaction.Validator.validate;
+
 import core.basesyntax.db.ShopStorage;
 import core.basesyntax.db.Storage;
-
-import static core.basesyntax.transaction.Validator.validate;
 
 //TODO: В методі change/read перевіряти, що read(item) може повертати null
 // — обробляти відсутність ключа явною помилкою або ініціалізацією.
@@ -32,7 +32,6 @@ public class ShopTransaction implements Transaction {
         }
         return newValue;
     }
-
 
     @Override
     public Integer init(String item, Integer quantity) {
