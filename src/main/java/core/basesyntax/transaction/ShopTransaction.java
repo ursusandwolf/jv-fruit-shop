@@ -5,12 +5,6 @@ import static core.basesyntax.transaction.Validator.validate;
 import core.basesyntax.db.ShopStorage;
 import core.basesyntax.db.Storage;
 
-//TODO: В методі change/read перевіряти, що read(item) може повертати null
-// — обробляти відсутність ключа явною помилкою або ініціалізацією.
-//TODO: Використовувати конкретні виключення: IllegalArgumentException
-// для null/некоректних аргументів, IllegalStateException для бізнес-невідповідностей.
-//TODO: Валідувати параметри у create/update: fruit не null/не порожній,
-// quantity != null && >= 0.
 public class ShopTransaction implements Transaction {
     private static final String ERR_UPDATE_FAILED_FORMAT
             = "Failed to update item '%s' with value %d";
@@ -18,8 +12,8 @@ public class ShopTransaction implements Transaction {
             = "Failed to create item '%s' with value %d";
     private final Storage storage;
 
-    public ShopTransaction() {
-        storage = new ShopStorage();
+    public ShopTransaction(Storage storage) {
+        this.storage = storage;
     }
 
     private int change(String item, Integer delta) {
