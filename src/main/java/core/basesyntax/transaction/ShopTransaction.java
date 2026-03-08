@@ -3,7 +3,6 @@ package core.basesyntax.transaction;
 import core.basesyntax.db.ShopStorage;
 import core.basesyntax.db.Storage;
 
-//TODO: Прибрати static Storage; інжектити Storage через конструктор.
 //TODO: В методі change/read перевіряти, що read(item) може повертати null
 // — обробляти відсутність ключа явною помилкою або ініціалізацією.
 //TODO: Використовувати конкретні виключення: IllegalArgumentException
@@ -11,18 +10,19 @@ import core.basesyntax.db.Storage;
 //TODO: Валідувати параметри у create/update: fruit не null/не порожній,
 // quantity != null && >= 0.
 public class ShopTransaction implements Transaction {
-    private static final Storage storage = new ShopStorage();
     private static final String NULL_ARG_FORMAT = "Argument '%s' must not be null";
     private static final String NEGATIVE_ARG_FORMAT = "Argument '%s' must be >= 0, but was %d";
     private static final String ERR_UPDATE_FAILED_FORMAT
             = "Failed to update item '%s' with value %d";
     private static final String ERR_CREATE_FAILED_FORMAT
             = "Failed to create item '%s' with value %d";
+    private final Storage storage;
 
     public ShopTransaction() {
+        storage = new ShopStorage();
     }
 
-    private static int change(String item, Integer delta) {
+    private int change(String item, Integer delta) {
         int lastValue = storage.read(item);
         int newValue = lastValue + delta;
         if (newValue < 0 || !storage.update(item, newValue)) {
