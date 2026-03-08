@@ -3,6 +3,8 @@ package core.basesyntax.db;
 import java.util.HashMap;
 import java.util.Map;
 
+import static core.basesyntax.transaction.Validator.validate;
+
 public class ShopStorage implements Storage {
     private final Map<String, Integer> storage = new HashMap<>();
 
@@ -13,6 +15,7 @@ public class ShopStorage implements Storage {
     //TODO: read повинен або повертати Integer (може бути null) та документувати поведінку,
     // або повертати 0 за замовчуванням — вибрати й дотримуватися.
     public boolean create(String fruit, Integer quantity) {
+        validate(fruit, quantity);
         if (storage.containsKey(fruit)) {
             return false;
         }

@@ -3,6 +3,8 @@ package core.basesyntax.transaction;
 import core.basesyntax.db.ShopStorage;
 import core.basesyntax.db.Storage;
 
+import static core.basesyntax.transaction.Validator.validate;
+
 //TODO: В методі change/read перевіряти, що read(item) може повертати null
 // — обробляти відсутність ключа явною помилкою або ініціалізацією.
 //TODO: Використовувати конкретні виключення: IllegalArgumentException
@@ -10,8 +12,6 @@ import core.basesyntax.db.Storage;
 //TODO: Валідувати параметри у create/update: fruit не null/не порожній,
 // quantity != null && >= 0.
 public class ShopTransaction implements Transaction {
-    private static final String NULL_ARG_FORMAT = "Argument '%s' must not be null";
-    private static final String NEGATIVE_ARG_FORMAT = "Argument '%s' must be >= 0, but was %d";
     private static final String ERR_UPDATE_FAILED_FORMAT
             = "Failed to update item '%s' with value %d";
     private static final String ERR_CREATE_FAILED_FORMAT
@@ -33,23 +33,6 @@ public class ShopTransaction implements Transaction {
         return newValue;
     }
 
-    private static void validate(String item, Integer quantity) {
-        if (item == null) {
-            throw new IllegalArgumentException(
-                    String.format(NULL_ARG_FORMAT, "item")
-            );
-        }
-        if (quantity == null) {
-            throw new IllegalArgumentException(
-                    String.format(NULL_ARG_FORMAT, "quantity")
-            );
-        }
-        if (quantity < 0) {
-            throw new IllegalArgumentException(
-                    String.format(NEGATIVE_ARG_FORMAT, "quantity", quantity)
-            );
-        }
-    }
 
     @Override
     public Integer init(String item, Integer quantity) {
