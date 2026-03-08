@@ -8,8 +8,6 @@ import static core.basesyntax.transaction.Validator.validate;
 public class ShopStorage implements Storage {
     private final Map<String, Integer> storage = new HashMap<>();
 
-    //TODO: Заборонити null/empty ключі та null/від'ємні значення при create/update;
-    // кидати IllegalArgumentException.
     //TODO: Розглянути повернення boolean у update/delete замість кидання IllegalArgumentException
     // при відсутності ключа (визначити контракт і задокументувати).
     //TODO: read повинен або повертати Integer (може бути null) та документувати поведінку,
@@ -29,6 +27,7 @@ public class ShopStorage implements Storage {
 
     // add or substrate in transaction layer
     public boolean update(String fruit, Integer quantity) {
+        validate(fruit, quantity);
         if (!storage.containsKey(fruit)) {
             throw new IllegalArgumentException(fruit + " not exist in storage!");
         }
