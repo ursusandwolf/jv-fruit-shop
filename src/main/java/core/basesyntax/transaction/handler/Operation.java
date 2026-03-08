@@ -1,5 +1,6 @@
 package core.basesyntax.transaction.handler;
 
+import core.basesyntax.db.ShopStorage;
 import core.basesyntax.transaction.FruitTransaction;
 import core.basesyntax.transaction.ShopTransaction;
 import core.basesyntax.transaction.Transaction;
@@ -19,7 +20,7 @@ public enum Operation {
             Operation.RETURN, new ReturnOperationHandler()
     );
     private final String code;
-    private final Transaction tx = new ShopTransaction();
+    private final Transaction tx = new ShopTransaction(new ShopStorage());
 
 
     Operation(String code) {
