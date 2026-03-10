@@ -1,5 +1,8 @@
 package core.basesyntax;
 
+import core.basesyntax.inout.LineReader;
+import core.basesyntax.inout.LineReaderFactory;
+import core.basesyntax.inout.ReaderType;
 import core.basesyntax.parser.DataConverter;
 import core.basesyntax.parser.DataConverterImpl;
 import core.basesyntax.report.ReportGenerator;
@@ -13,7 +16,6 @@ import java.util.List;
 
 //TODO: Використовувати Reader/Writer інтерфейси замість прямого Files/FileWriter;
 // закривати ресурси через try-with-resources.
-//TODO: Не читати жорстко "data.csv" — передавати шлях через args або конфігурацію.
 //TODO: Не кастити List<?> — змінити сигнатуру DataConverter на List<FruitTransaction>.
 
 public class Main {
@@ -23,8 +25,9 @@ public class Main {
         String filePath = args.length > 0
                         ? args[0]
                         : System.getProperty("input.file", "data.csv");
+        LineReader lr = LineReaderFactory.create(ReaderType.CSV);
 
-        List<String> lines = Files.readAllLines(Path.of(filePath));
+        List<String> lines = lr.readLines(filePath).toList();
         // 2. Convert the incoming data into FruitTransactions list
         DataConverter converter = new DataConverterImpl();
         List<FruitTransaction> transactions
@@ -32,7 +35,7 @@ public class Main {
         // 3. Create and feel the map with all OperationHandler implementations
         // 4. Process the incoming transactions with applicable OperationHandler implementations
         for (FruitTransaction tx : transactions) {
-            tx.execute();
+            //tx.execute();
         }
         // 5.Generate report based on the current Storage state
         ReportGenerator generator = new ReportGeneratorImpl();
