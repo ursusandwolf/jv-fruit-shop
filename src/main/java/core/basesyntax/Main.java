@@ -1,8 +1,10 @@
 package core.basesyntax;
 
+import core.basesyntax.inout.CsvWriter;
 import core.basesyntax.inout.LineReader;
 import core.basesyntax.inout.LineReaderFactory;
 import core.basesyntax.inout.ReaderType;
+import core.basesyntax.inout.ReportWriter;
 import core.basesyntax.parser.DataConverter;
 import core.basesyntax.parser.DataConverterImpl;
 import core.basesyntax.report.ReportGenerator;
@@ -10,8 +12,6 @@ import core.basesyntax.report.ReportGeneratorImpl;
 import core.basesyntax.transaction.FruitTransaction;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 //TODO: Використовувати Reader/Writer інтерфейси замість прямого Files/FileWriter;
@@ -41,7 +41,7 @@ public class Main {
         ReportGenerator generator = new ReportGeneratorImpl();
         String report = generator.getReport();
         // 6. Write the received report into the destination file
-        FileWriter fileWriter = new FileWriter("finalReport.csv");
-        fileWriter.write(report);
+        ReportWriter rw = new CsvWriter();
+        rw.write("finalReport.csv", report);
     }
 }
