@@ -10,7 +10,6 @@ import core.basesyntax.parser.DataConverterImpl;
 import core.basesyntax.report.ReportGenerator;
 import core.basesyntax.report.ReportGeneratorImpl;
 import core.basesyntax.transaction.FruitTransaction;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 

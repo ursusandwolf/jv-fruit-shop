@@ -4,7 +4,6 @@ import core.basesyntax.db.ShopStorage;
 import core.basesyntax.transaction.FruitTransaction;
 import core.basesyntax.transaction.ShopTransaction;
 import core.basesyntax.transaction.Transaction;
-
 import java.util.Map;
 
 public enum Operation {
@@ -21,7 +20,6 @@ public enum Operation {
     );
     private final String code;
     private final Transaction tx = new ShopTransaction(new ShopStorage());
-
 
     Operation(String code) {
         this.code = code;

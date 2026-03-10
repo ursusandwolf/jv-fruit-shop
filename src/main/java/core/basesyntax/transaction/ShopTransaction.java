@@ -2,7 +2,6 @@ package core.basesyntax.transaction;
 
 import static core.basesyntax.transaction.Validator.validate;
 
-import core.basesyntax.db.ShopStorage;
 import core.basesyntax.db.Storage;
 
 public class ShopTransaction implements Transaction {
