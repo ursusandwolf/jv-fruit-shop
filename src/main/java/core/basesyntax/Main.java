@@ -18,9 +18,13 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] arg) throws IOException {
+    public static void main(String[] args) throws IOException {
         // 1. Read the data from the input CSV file
-        List<String> lines = Files.readAllLines(Path.of("data.csv"));
+        String filePath = args.length > 0
+                        ? args[0]
+                        : System.getProperty("input.file", "data.csv");
+
+        List<String> lines = Files.readAllLines(Path.of(filePath));
         // 2. Convert the incoming data into FruitTransactions list
         DataConverter converter = new DataConverterImpl();
         List<FruitTransaction> transactions
