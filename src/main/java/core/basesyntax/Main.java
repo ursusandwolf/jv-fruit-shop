@@ -12,6 +12,7 @@ import core.basesyntax.report.ReportGeneratorImpl;
 import core.basesyntax.transaction.FruitTransaction;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 
 //TODO: Використовувати Reader/Writer інтерфейси замість прямого Files/FileWriter;
 // закривати ресурси через try-with-resources.
@@ -26,11 +27,10 @@ public class Main {
                         : System.getProperty("input.file", "data.csv");
         LineReader lr = LineReaderFactory.create(ReaderType.CSV);
 
-        List<String> lines = lr.readLines(filePath).toList();
+        Stream<String> lines = lr.readLines(filePath);
         // 2. Convert the incoming data into FruitTransactions list
         DataConverter converter = new DataConverterImpl();
-        List<FruitTransaction> transactions
-                = (List<FruitTransaction>) converter.convertToTransaction(lines);
+        List<?> objects = converter.convertToTransaction(lines);
         // 3. Create and feel the map with all OperationHandler implementations
         // 4. Process the incoming transactions with applicable OperationHandler implementations
         for (FruitTransaction tx : transactions) {
