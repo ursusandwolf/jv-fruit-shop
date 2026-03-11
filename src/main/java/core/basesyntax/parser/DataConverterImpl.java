@@ -3,19 +3,22 @@ package core.basesyntax.parser;
 import core.basesyntax.transaction.FruitTransaction;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class DataConverterImpl implements DataConverter {
     @Override
     public Stream<FruitTransaction> convertToTransaction(Stream<String> lines) {
+        AtomicInteger line = new AtomicInteger(1);
+
         return lines
                 .map(String::trim)
                 .filter(s -> !s.startsWith("type"))
-                .map(this::parseTransaction)
+                .map(s -> parseTransaction(s, line.getAndIncrement()))
                 .flatMap(Optional::stream);
     }
 
-    private Optional<FruitTransaction> parseTransaction(String line) {
+    private Optional<FruitTransaction> parseTransaction(String line, int lineNumber) {
         try {
             String[] split = line.split(",");
             String code = split[0].trim();
@@ -24,8 +27,17 @@ public class DataConverterImpl implements DataConverter {
 
             return Optional.of(new FruitTransaction(code, fruit, quantity));
 
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            return Optional.empty();
+        } catch (NumberFormatException e) {
+            System.err.println(
+                    "Parse error at line " + lineNumber +
+                            ": invalid number -> " + line
+            );
+        } catch (Exception e) {
+            System.err.println(
+                    "Malformed CSV at line " + lineNumber +
+                            ": " + line
+            );
         }
+        return Optional.empty();
     }
 }
