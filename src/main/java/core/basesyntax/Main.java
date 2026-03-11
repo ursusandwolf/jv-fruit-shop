@@ -19,7 +19,7 @@ public class Main {
         // 1. Read the data from the input CSV file
         String filePath = args.length > 0
                         ? args[0]
-                        : System.getProperty("input.file", "data.csv");
+                        : System.getProperty("config.file", "data/data.csv");
         // 2. Convert the incoming data into FruitTransactions list
         LineReader lr = LineReaderFactory.create(ReaderType.CSV);
         DataConverter converter = new DataConverterImpl();
