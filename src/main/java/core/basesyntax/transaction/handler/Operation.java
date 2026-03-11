@@ -12,14 +12,7 @@ public enum Operation {
     PURCHASE("p"),
     RETURN("r");
 
-    private static final Map<Operation, OperationHandler> strategy = Map.of(
-            Operation.BALANCE, new BalanceOperationHandler(),
-            Operation.SUPPLY, new SupplyOperationHandler(),
-            Operation.PURCHASE, new PurchaseOperationHandler(),
-            Operation.RETURN, new ReturnOperationHandler()
-    );
     private final String code;
-    private final Transaction tx = new ShopTransaction(new ShopStorage());
 
     Operation(String code) {
         this.code = code;
@@ -35,11 +28,6 @@ public enum Operation {
         }
         //Unknown operation code: null
         throw new IllegalArgumentException("Unknown operation code: " + code);
-    }
-
-    public void execute(FruitTransaction ft) {
-        OperationHandler handler = strategy.get(this);
-        handler.handle(ft, tx);
     }
 
     public String getCode() {

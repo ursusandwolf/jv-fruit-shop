@@ -27,7 +27,7 @@ public class Main {
             Stream<FruitTransaction> transactions =
                     converter.convertToTransaction(lines);
             transactions.forEach(tx -> {
-                // tx.execute();
+                tx.execute();
             });
         }
         // 3. Create and feel the map with all OperationHandler implementations
