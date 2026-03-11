@@ -11,12 +11,7 @@ import core.basesyntax.report.ReportGenerator;
 import core.basesyntax.report.ReportGeneratorImpl;
 import core.basesyntax.transaction.FruitTransaction;
 import java.io.IOException;
-import java.util.List;
 import java.util.stream.Stream;
-
-//TODO: Використовувати Reader/Writer інтерфейси замість прямого Files/FileWriter;
-// закривати ресурси через try-with-resources.
-//TODO: Не кастити List<?> — змінити сигнатуру DataConverter на List<FruitTransaction>.
 
 public class Main {
 
@@ -25,22 +20,27 @@ public class Main {
         String filePath = args.length > 0
                         ? args[0]
                         : System.getProperty("input.file", "data.csv");
-        LineReader lr = LineReaderFactory.create(ReaderType.CSV);
-
-        Stream<String> lines = lr.readLines(filePath);
         // 2. Convert the incoming data into FruitTransactions list
+        LineReader lr = LineReaderFactory.create(ReaderType.CSV);
         DataConverter converter = new DataConverterImpl();
-        List<?> objects = converter.convertToTransaction(lines);
+        try (Stream<String> lines = lr.readLines(filePath)) {
+            Stream<FruitTransaction> transactions =
+                    converter.convertToTransaction(lines);
+            transactions.forEach(tx -> {
+                // tx.execute();
+            });
+        }
         // 3. Create and feel the map with all OperationHandler implementations
         // 4. Process the incoming transactions with applicable OperationHandler implementations
-        for (FruitTransaction tx : transactions) {
-            //tx.execute();
-        }
         // 5.Generate report based on the current Storage state
-        ReportGenerator generator = new ReportGeneratorImpl();
-        String report = generator.getReport();
         // 6. Write the received report into the destination file
+        writeReport();
+    }
+
+    private static void writeReport() throws IOException {
+        ReportGenerator generator = new ReportGeneratorImpl();
         ReportWriter rw = new CsvWriter();
-        rw.write("finalReport.csv", report);
+        rw.write("finalReport.csv",
+                generator.getReport());
     }
 }
