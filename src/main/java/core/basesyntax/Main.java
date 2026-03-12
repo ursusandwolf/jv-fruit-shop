@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import core.basesyntax.db.ShopStorage;
 import core.basesyntax.inout.CsvWriter;
 import core.basesyntax.inout.LineReader;
 import core.basesyntax.inout.LineReaderFactory;
@@ -10,6 +11,10 @@ import core.basesyntax.parser.DataConverterImpl;
 import core.basesyntax.report.ReportGenerator;
 import core.basesyntax.report.ReportGeneratorImpl;
 import core.basesyntax.transaction.FruitTransaction;
+import core.basesyntax.transaction.ShopTransaction;
+import core.basesyntax.transaction.Strategy;
+import core.basesyntax.transaction.Transaction;
+
 import java.io.IOException;
 import java.util.stream.Stream;
 
@@ -26,8 +31,9 @@ public class Main {
         try (Stream<String> lines = lr.readLines(filePath)) {
             Stream<FruitTransaction> transactions =
                     converter.convertToTransaction(lines);
-            transactions.forEach(tx -> {
-                tx.execute();
+            Transaction shopTransaction = new ShopTransaction(new ShopStorage());
+            transactions.forEach(ft -> {
+                Strategy.execute(ft, shopTransaction);
             });
         }
         // 3. Create and feel the map with all OperationHandler implementations
