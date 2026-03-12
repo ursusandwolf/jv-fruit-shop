@@ -1,8 +1,5 @@
 package core.basesyntax.transaction.handler;
 
-import core.basesyntax.transaction.FruitTransaction;
-import core.basesyntax.transaction.Transaction;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +10,7 @@ public enum Operation {
     RETURN("r", new ReturnOperationHandler());
 
     private static final Map<String, Operation> BY_CODE = new HashMap<>();
+
     static {
         for (Operation op : values()) {
             BY_CODE.put(op.code, op);

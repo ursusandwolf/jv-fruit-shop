@@ -1,7 +1,6 @@
 package core.basesyntax.parser;
 
 import core.basesyntax.transaction.FruitTransaction;
-
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -29,13 +28,13 @@ public class DataConverterImpl implements DataConverter {
 
         } catch (NumberFormatException e) {
             System.err.println(
-                    "Parse error at line " + lineNumber +
-                            ": invalid number -> " + line
+                    "Parse error at line " + lineNumber
+                            + ": invalid number -> " + line
             );
         } catch (Exception e) {
             System.err.println(
-                    "Malformed CSV at line " + lineNumber +
-                            ": " + line
+                    "Malformed CSV at line " + lineNumber
+                            + ": " + line
             );
         }
         return Optional.empty();

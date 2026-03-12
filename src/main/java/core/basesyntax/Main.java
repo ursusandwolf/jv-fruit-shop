@@ -14,7 +14,6 @@ import core.basesyntax.transaction.FruitTransaction;
 import core.basesyntax.transaction.ShopTransaction;
 import core.basesyntax.transaction.Strategy;
 import core.basesyntax.transaction.Transaction;
-
 import java.io.IOException;
 import java.util.stream.Stream;
 
