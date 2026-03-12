@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import core.basesyntax.db.ShopStorage;
+import core.basesyntax.db.Storage;
 import core.basesyntax.inout.CsvWriter;
 import core.basesyntax.inout.LineReader;
 import core.basesyntax.inout.LineReaderFactory;
@@ -19,6 +20,8 @@ import java.util.stream.Stream;
 
 public class Main {
 
+    public static final Storage SHOP_STORAGE = new ShopStorage();
+
     public static void main(String[] args) throws IOException {
         // 1. Read the data from the input CSV file
         String filePath = args.length > 0
@@ -30,7 +33,7 @@ public class Main {
         try (Stream<String> lines = lr.readLines(filePath)) {
             Stream<FruitTransaction> transactions =
                     converter.convertToTransaction(lines);
-            Transaction shopTransaction = new ShopTransaction(new ShopStorage());
+            Transaction shopTransaction = new ShopTransaction(SHOP_STORAGE);
             transactions.forEach(ft -> {
                 Strategy.execute(ft, shopTransaction);
             });
@@ -46,6 +49,6 @@ public class Main {
         ReportGenerator generator = new ReportGeneratorImpl();
         ReportWriter rw = new CsvWriter();
         rw.write("finalReport.csv",
-                generator.getReport());
+                generator.getReport(SHOP_STORAGE));
     }
 }
