@@ -66,26 +66,31 @@ class FruitTransactionOperationTest {
     @Test
     void execute_Supply_ShouldIncreaseQuantity() {
         String key = uniqueKey();
-        new FruitTransaction("b", key, 10).execute();
-        new FruitTransaction("s", key, 5).execute();
-        ShopTransaction check = new ShopTransaction();
-        assertEquals(15, check.get(key));
+        FruitTransaction b = new FruitTransaction("b", key, 10);
+        FruitTransaction s = new FruitTransaction("s", key, 5);
+        Strategy.execute(b, transaction);
+        Strategy.execute(s, transaction);
+        assertEquals(15, transaction.get(key));
     }
 
     @Test
     void execute_Purchase_ShouldDecreaseQuantity() {
         String key = uniqueKey();
-        new FruitTransaction("b", key, 10).execute();
-        new FruitTransaction("p", key, 4).execute();
-        ShopTransaction check = new ShopTransaction();
-        assertEquals(6, check.get(key));
+        FruitTransaction b = new FruitTransaction("b", key, 10);
+        FruitTransaction p = new FruitTransaction("p", key, 4);
+        Strategy.execute(b, transaction);
+        Strategy.execute(p, transaction);
+        assertEquals(6, transaction.get(key));
     }
 
     @Test
     void execute_Purchase_ShouldThrow_WhenInsufficientBalance() {
         String key = uniqueKey();
-        new FruitTransaction("b", key, 5).execute();
-        assertThrows(IllegalStateException.class,
-                () -> new FruitTransaction("p", key, 10).execute());
+        FruitTransaction b = new FruitTransaction("b", key, 5);
+        FruitTransaction p = new FruitTransaction("p", key, 10);
+        Strategy.execute(b, transaction);
+        assertThrows(IllegalStateException.class, () -> {
+            Strategy.execute(p, transaction);;
+        });
     }
 }
