@@ -3,11 +3,21 @@ package core.basesyntax.transaction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.ShopStorage;
+import core.basesyntax.transaction.handler.Operation;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class FruitTransactionOperationTest {
+
+    private ShopTransaction transaction;
+
+    @BeforeEach
+    void setUp() {
+        transaction = new ShopTransaction(new ShopStorage());
+    }
 
     @ParameterizedTest
     @CsvSource({
@@ -18,22 +28,20 @@ class FruitTransactionOperationTest {
             "B, BALANCE",
             " S , SUPPLY"
     })
-    void fromCode_ShouldReturnCorrectOperation(String code,
-                                               FruitTransaction.Operation expected) {
-        assertEquals(expected,
-                FruitTransaction.Operation.fromCode(code));
+    void fromCode_ShouldReturnCorrectOperation(String code, Operation expected) {
+        assertEquals(expected, Operation.fromCode(code));
     }
 
     @Test
     void fromCode_ShouldThrow_WhenUnknownCode() {
         assertThrows(IllegalArgumentException.class,
-                () -> FruitTransaction.Operation.fromCode("x"));
+                () -> Operation.fromCode("x"));
     }
 
     @Test
     void fromCode_ShouldThrow_WhenCodeIsNull() {
         assertThrows(IllegalArgumentException.class,
-                () -> FruitTransaction.Operation.fromCode(null));
+                () -> Operation.fromCode(null));
     }
 
     @Test
@@ -50,10 +58,9 @@ class FruitTransactionOperationTest {
     @Test
     void execute_Balance_ShouldInitializeStorage() {
         String key = uniqueKey();
-        FruitTransaction tx = new FruitTransaction("b", key, 20);
-        tx.execute();
-        ShopTransaction check = new ShopTransaction();
-        assertEquals(20, check.get(key));
+        FruitTransaction ft = new FruitTransaction("b", key, 20);
+        Strategy.execute(ft, transaction);
+        assertEquals(20, transaction.get(key));
     }
 
     @Test

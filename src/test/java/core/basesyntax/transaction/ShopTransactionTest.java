@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.ShopStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ class ShopTransactionTest {
 
     @BeforeEach
     void setUp() {
-        transaction = new ShopTransaction();
+        transaction = new ShopTransaction(new ShopStorage());
     }
 
     private String uniqueKey() {
