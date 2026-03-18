@@ -10,21 +10,26 @@ import java.util.stream.Stream;
 public class DataConverterImpl implements DataConverter {
     @Override
     public Stream<FruitTransaction> convertToTransaction(Stream<String> lines) {
+        return convertToTransaction(lines, System.err::println);
+    }
+
+    public Stream<FruitTransaction> convertToTransaction(
+            Stream<String> lines, Consumer<String> errorHandler) {
         AtomicInteger line = new AtomicInteger(1);
 
         return lines
                 .map(String::trim)
                 .filter(s -> !s.startsWith("type"))
-                .map(s -> parseTransaction(s, line.getAndIncrement()))
+                .map(s -> parseTransaction(s, line.getAndIncrement(), errorHandler))
                 .flatMap(Optional::stream);
     }
 
-    public Optional<FruitTransaction> parseTransaction(
+    private Optional<FruitTransaction> parseTransaction(
             String line, int lineNumber) {
         return parseTransaction(line, lineNumber, System.err::println);
     }
 
-    public Optional<FruitTransaction> parseTransaction(
+    private Optional<FruitTransaction> parseTransaction(
             String line, int lineNumber, Consumer<String> errorHandler) {
         try {
             String[] split = line.split(",");

@@ -2,10 +2,14 @@ package core.basesyntax.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.transaction.FruitTransaction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+
+import core.basesyntax.transaction.handler.Operation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,80 +24,64 @@ class DataConverterImplTest {
 
     @Test
     void convert_ShouldParseSingleLine() {
-        List<String> input = List.of("b,apple,10");
-        List<?> result = converter.convertToTransaction(input);
+        Stream<String> input = Stream.of("b,apple,10");
+        List<FruitTransaction> result = converter.convertToTransaction(input).toList();
 
         assertEquals(1, result.size());
 
-        FruitTransaction tx = (FruitTransaction) result.get(0);
-        assertEquals("b", FruitTransaction.Operation.BALANCE.getCode());
+        FruitTransaction tx = result.get(0);
+        assertEquals("b", Operation.BALANCE.getCode());
         assertEquals("apple", tx.getFruit());
         assertEquals(10, tx.getQuantity());
     }
 
     @Test
     void convert_ShouldSkipHeader() {
-        List<String> input = List.of(
+        Stream<String> input = Stream.of(
                 "type,fruit,quantity",
                 "b,apple,10"
         );
-        List<?> result = converter.convertToTransaction(input);
+        List<FruitTransaction> result = converter.convertToTransaction(input).toList();
         assertEquals(1, result.size());
     }
 
     @Test
     void convert_ShouldSkipHeader_IgnoringCase() {
-        List<String> input = List.of(
+        Stream<String> input = Stream.of(
                 "TyPe,fruit,quantity",
                 "b,apple,10"
         );
-        List<?> result = converter.convertToTransaction(input);
+        List<FruitTransaction> result = converter.convertToTransaction(input).toList();
         assertEquals(1, result.size());
     }
 
     @Test
     void convert_ShouldTrimValues() {
-        List<String> input = List.of("  b  ,  apple  ,  10  ");
-        List<?> result = converter.convertToTransaction(input);
-        FruitTransaction tx = (FruitTransaction) result.get(0);
+        Stream<String> input = Stream.of("  b  ,  apple  ,  10  ");
+        List<FruitTransaction> result = converter.convertToTransaction(input).toList();
+        FruitTransaction tx = result.get(0);
 
-        assertEquals("b", FruitTransaction.Operation.BALANCE.getCode());
+        assertEquals("b", Operation.BALANCE.getCode());
         assertEquals("apple", tx.getFruit());
         assertEquals(10, tx.getQuantity());
     }
 
     @Test
-    void convert_ShouldThrowNumberFormatException_WhenQuantityInvalid() {
-        List<String> input = List.of("b,apple,ten");
-        assertThrows(NumberFormatException.class,
-                () -> converter.convertToTransaction(input));
+    void convert_ShouldBeParseError_WhenQuantityInvalid() {
+        List<String> errors = new ArrayList<>();
+        Stream<String> input = Stream.of("b,apple,ten"); //Parse error at line 1
+        List<FruitTransaction> result
+                = converter.convertToTransaction(input, errors::add).toList();
+        assertTrue(errors.get(0).contains("Parse error"));
     }
 
     @Test
-    void convert_ShouldThrowArrayIndexOutOfBounds_WhenColumnsMissing() {
-        List<String> input = List.of("b,apple");
-        assertThrows(ArrayIndexOutOfBoundsException.class,
-                () -> converter.convertToTransaction(input));
+    void convert_ShouldBeParseError_WhenColumnsMissing() {
+        List<String> errors = new ArrayList<>();
+        Stream<String> input = Stream.of("b,apple"); //Malformed CSV at line
+        List<FruitTransaction> result
+                = converter.convertToTransaction(input, errors::add).toList();
+        assertTrue(errors.get(0).contains("Malformed CSV at line"));
     }
 
-    @Test
-    void convert_ShouldFail_OnEmptyLine() {
-        List<String> input = List.of("");
-        assertThrows(ArrayIndexOutOfBoundsException.class,
-                () -> converter.convertToTransaction(input));
-    }
-
-    @Test
-    void convert_ShouldThrowNullPointer_WhenLineIsNull() {
-        List<String> input = new ArrayList<>();
-        input.add(null);
-        assertThrows(NullPointerException.class,
-                () -> converter.convertToTransaction(input));
-    }
-
-    @Test
-    void convert_ShouldThrowNullPointer_WhenIterableIsNull() {
-        assertThrows(NullPointerException.class,
-                () -> converter.convertToTransaction(null));
-    }
 }
