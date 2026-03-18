@@ -85,8 +85,11 @@ class ShopStorageTest {
     }
 
     @Test
-    void create_AllowsNullKey_CurrentBehavior() {
-        storage.create(null, 10);
-        assertEquals(10, storage.read(null));
+    void create_NullKey_ShouldThrowException() {
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> storage.create(null, 10)
+        );
+        assertEquals("'item' must not be null", ex.getMessage());
     }
 }

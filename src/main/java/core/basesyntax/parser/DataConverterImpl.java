@@ -1,7 +1,6 @@
 package core.basesyntax.parser;
 
 import core.basesyntax.transaction.FruitTransaction;
-
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;

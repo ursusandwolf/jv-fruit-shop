@@ -1,15 +1,13 @@
 package core.basesyntax.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.transaction.FruitTransaction;
+import core.basesyntax.transaction.handler.Operation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import core.basesyntax.transaction.handler.Operation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
