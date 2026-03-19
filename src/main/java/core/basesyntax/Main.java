@@ -11,7 +11,6 @@ import core.basesyntax.parser.DataConverter;
 import core.basesyntax.parser.DataConverterImpl;
 import core.basesyntax.report.ReportGenerator;
 import core.basesyntax.report.ReportGeneratorImpl;
-import core.basesyntax.transaction.FruitTransaction;
 import core.basesyntax.transaction.ShopTransaction;
 import core.basesyntax.transaction.Strategy;
 import core.basesyntax.transaction.Transaction;
@@ -25,30 +24,26 @@ public class Main {
     public static void main(String[] args) throws IOException {
         // 1. Read the data from the input CSV file
         String filePath = args.length > 0
-                        ? args[0]
-                        : System.getProperty("config.file", "data/data.csv");
+                ? args[0]
+                : System.getProperty("config.file", "data/data.csv");
         // 2. Convert the incoming data into FruitTransactions list
-        LineReader lr = LineReaderFactory.create(ReaderType.CSV);
+        LineReader reader = LineReaderFactory.create(ReaderType.CSV);
         DataConverter converter = new DataConverterImpl();
-        try (Stream<String> lines = lr.readLines(filePath)) {
-            Stream<FruitTransaction> transactions =
-                    converter.convertToTransaction(lines);
-            Transaction shopTransaction = new ShopTransaction(SHOP_STORAGE);
-            transactions.forEach(ft -> {
-                Strategy.execute(ft, shopTransaction);
-            });
+        Transaction shopTransaction = new ShopTransaction(SHOP_STORAGE);
+
+        try (Stream<String> lines = reader.readLines(filePath)) {
+            converter.convertToTransaction(lines)
+                    .forEach(ft -> {
+                        Strategy.execute(ft, shopTransaction);
+                    });
         }
-        // 3. Create and feel the map with all OperationHandler implementations
-        // 4. Process the incoming transactions with applicable OperationHandler implementations
-        // 5.Generate report based on the current Storage state
-        // 6. Write the received report into the destination file
         writeReport();
     }
 
     private static void writeReport() throws IOException {
+        ReportWriter writer = new CsvWriter();
         ReportGenerator generator = new ReportGeneratorImpl();
-        ReportWriter rw = new CsvWriter();
-        rw.write("finalReport.csv",
+        writer.write("finalReport.csv",
                 generator.getReport(SHOP_STORAGE));
     }
 }

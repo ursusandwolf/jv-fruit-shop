@@ -21,6 +21,10 @@ public class ShopStorage implements Storage {
         return storage.get(key);
     }
 
+    public Iterable<String> getAllKeys() {
+        return storage.keySet();
+    }
+
     // add or substrate in transaction layer
     public boolean update(String fruit, Integer quantity) {
         validate(fruit, quantity);

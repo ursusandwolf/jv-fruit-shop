@@ -6,6 +6,8 @@ public interface Storage {
 
     Integer read(String fruit);
 
+    Iterable<String> getAllKeys();
+
     boolean update(String fruit, Integer quantity);
 
     boolean delete(String fruit);
