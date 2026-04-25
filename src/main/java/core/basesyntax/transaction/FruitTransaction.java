@@ -1,6 +1,6 @@
 package core.basesyntax.transaction;
 
-import core.basesyntax.transaction.handler.Operation;
+import core.basesyntax.strategy.handler.Operation;
 
 public class FruitTransaction {
 

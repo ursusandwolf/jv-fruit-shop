@@ -1,13 +1,13 @@
-package core.basesyntax.transaction.handler;
+package core.basesyntax.strategy.handler;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public enum Operation {
-    BALANCE("b", new BalanceOperationHandler()),
-    SUPPLY("s", new SupplyOperationHandler()),
-    PURCHASE("p", new PurchaseOperationHandler()),
-    RETURN("r", new ReturnOperationHandler());
+    BALANCE("b"),
+    SUPPLY("s"),
+    PURCHASE("p"),
+    RETURN("r");
 
     private static final Map<String, Operation> BY_CODE = new HashMap<>();
 
@@ -18,11 +18,9 @@ public enum Operation {
     }
 
     private final String code;
-    private final OperationHandler handler;
 
-    Operation(String code, OperationHandler handler) {
+    Operation(String code) {
         this.code = code;
-        this.handler = handler;
     }
 
     public static Operation fromCode(String code) {
@@ -38,9 +36,5 @@ public enum Operation {
 
     public String getCode() {
         return code;
-    }
-
-    public OperationHandler getHandler() {
-        return handler;
     }
 }

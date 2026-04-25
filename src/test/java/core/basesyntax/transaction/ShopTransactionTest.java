@@ -69,27 +69,27 @@ class ShopTransactionTest {
     }
 
     @Test
-    void add_ShouldThrowNullPointer_WhenItemNotExists() {
+    void add_ShouldThrow_WhenItemNotExists() {
         String key = uniqueKey();
 
-        assertThrows(NullPointerException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> transaction.add(key, 5));
     }
 
     @Test
-    void substrate_ShouldDecreaseQuantity() {
+    void subtract_ShouldDecreaseQuantity() {
         String key = uniqueKey();
         transaction.init(key, 10);
-        Integer result = transaction.substrate(key, 3);
+        Integer result = transaction.subtract(key, 3);
         assertEquals(7, result);
     }
 
     @Test
-    void substrate_ShouldThrow_WhenResultNegative() {
+    void subtract_ShouldThrow_WhenResultNegative() {
         String key = uniqueKey();
         transaction.init(key, 5);
         assertThrows(IllegalStateException.class,
-                () -> transaction.substrate(key, 10));
+                () -> transaction.subtract(key, 10));
     }
 
     @Test

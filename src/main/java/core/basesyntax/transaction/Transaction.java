@@ -7,6 +7,6 @@ public interface Transaction {
 
     Integer add(String item, Integer quantity);
 
-    Integer substrate(String item, Integer quantity);
+    Integer subtract(String item, Integer quantity);
 
 }

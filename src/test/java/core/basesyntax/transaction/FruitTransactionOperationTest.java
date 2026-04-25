@@ -4,7 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.ShopStorage;
-import core.basesyntax.transaction.handler.Operation;
+import core.basesyntax.service.ShopService;
+import core.basesyntax.service.ShopServiceImpl;
+import core.basesyntax.strategy.OperationStrategy;
+import core.basesyntax.strategy.OperationStrategyImpl;
+import core.basesyntax.strategy.handler.BalanceOperationHandler;
+import core.basesyntax.strategy.handler.Operation;
+import core.basesyntax.strategy.handler.OperationHandler;
+import core.basesyntax.strategy.handler.PurchaseOperationHandler;
+import core.basesyntax.strategy.handler.ReturnOperationHandler;
+import core.basesyntax.strategy.handler.SupplyOperationHandler;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,10 +25,18 @@ import org.junit.jupiter.params.provider.CsvSource;
 class FruitTransactionOperationTest {
 
     private ShopTransaction transaction;
+    private ShopService shopService;
 
     @BeforeEach
     void setUp() {
         transaction = new ShopTransaction(new ShopStorage());
+        Map<Operation, OperationHandler> handlers = new HashMap<>();
+        handlers.put(Operation.BALANCE, new BalanceOperationHandler());
+        handlers.put(Operation.SUPPLY, new SupplyOperationHandler());
+        handlers.put(Operation.PURCHASE, new PurchaseOperationHandler());
+        handlers.put(Operation.RETURN, new ReturnOperationHandler());
+        OperationStrategy strategy = new OperationStrategyImpl(handlers);
+        shopService = new ShopServiceImpl(strategy, transaction);
     }
 
     @ParameterizedTest
@@ -59,7 +79,7 @@ class FruitTransactionOperationTest {
     void execute_Balance_ShouldInitializeStorage() {
         String key = uniqueKey();
         FruitTransaction ft = new FruitTransaction("b", key, 20);
-        Strategy.execute(ft, transaction);
+        shopService.process(Collections.singletonList(ft));
         assertEquals(20, transaction.get(key));
     }
 
@@ -68,8 +88,7 @@ class FruitTransactionOperationTest {
         String key = uniqueKey();
         FruitTransaction b = new FruitTransaction("b", key, 10);
         FruitTransaction s = new FruitTransaction("s", key, 5);
-        Strategy.execute(b, transaction);
-        Strategy.execute(s, transaction);
+        shopService.process(java.util.List.of(b, s));
         assertEquals(15, transaction.get(key));
     }
 
@@ -78,8 +97,7 @@ class FruitTransactionOperationTest {
         String key = uniqueKey();
         FruitTransaction b = new FruitTransaction("b", key, 10);
         FruitTransaction p = new FruitTransaction("p", key, 4);
-        Strategy.execute(b, transaction);
-        Strategy.execute(p, transaction);
+        shopService.process(java.util.List.of(b, p));
         assertEquals(6, transaction.get(key));
     }
 
@@ -88,9 +106,9 @@ class FruitTransactionOperationTest {
         String key = uniqueKey();
         FruitTransaction b = new FruitTransaction("b", key, 5);
         FruitTransaction p = new FruitTransaction("p", key, 10);
-        Strategy.execute(b, transaction);
+        shopService.process(Collections.singletonList(b));
         assertThrows(IllegalStateException.class, () -> {
-            Strategy.execute(p, transaction);;
+            shopService.process(Collections.singletonList(p));
         });
     }
 }

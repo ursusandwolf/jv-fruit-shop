@@ -14,12 +14,17 @@ public class DataConverterImpl implements DataConverter {
 
     public Stream<FruitTransaction> convertToTransaction(
             Stream<String> lines, Consumer<String> errorHandler) {
-        AtomicInteger line = new AtomicInteger(1);
+        AtomicInteger lineCounter = new AtomicInteger(1);
 
         return lines
                 .map(String::trim)
-                .filter(s -> !s.startsWith("type"))
-                .map(s -> parseTransaction(s, line.getAndIncrement(), errorHandler))
+                .map(s -> {
+                    int lineNumber = lineCounter.getAndIncrement();
+                    if (s.toLowerCase().startsWith("type")) {
+                        return Optional.<FruitTransaction>empty();
+                    }
+                    return parseTransaction(s, lineNumber, errorHandler);
+                })
                 .flatMap(Optional::stream);
     }
 

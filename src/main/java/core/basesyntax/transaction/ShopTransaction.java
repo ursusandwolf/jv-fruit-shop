@@ -16,7 +16,10 @@ public class ShopTransaction implements Transaction {
     }
 
     private int change(String item, Integer delta) {
-        int lastValue = storage.read(item);
+        Integer lastValue = storage.read(item);
+        if (lastValue == null) {
+            throw new IllegalArgumentException("Item '" + item + "' not found in storage!");
+        }
         int newValue = lastValue + delta;
         if (newValue < 0 || !storage.update(item, newValue)) {
             throw new IllegalStateException(
@@ -48,7 +51,7 @@ public class ShopTransaction implements Transaction {
     }
 
     @Override
-    public Integer substrate(String item, Integer quantity) {
+    public Integer subtract(String item, Integer quantity) {
         validate(item, quantity);
         return change(item, -1 * quantity);
     }

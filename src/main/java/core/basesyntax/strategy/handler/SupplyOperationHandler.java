@@ -1,12 +1,12 @@
-package core.basesyntax.transaction.handler;
+package core.basesyntax.strategy.handler;
 
 import core.basesyntax.transaction.FruitTransaction;
 import core.basesyntax.transaction.Transaction;
 
-public class PurchaseOperationHandler implements OperationHandler {
+public class SupplyOperationHandler implements OperationHandler {
 
     @Override
     public void handle(FruitTransaction ft, Transaction tx) {
-        tx.substrate(ft.getFruit(), ft.getQuantity());
+        tx.add(ft.getFruit(), ft.getQuantity());
     }
 }
