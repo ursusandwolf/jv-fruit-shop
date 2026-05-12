@@ -24,7 +24,6 @@ import core.basesyntax.strategy.handler.SupplyOperationHandler;
 import core.basesyntax.transaction.FruitTransaction;
 import core.basesyntax.transaction.ShopTransaction;
 import core.basesyntax.transaction.Transaction;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +31,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
+    private static final String DEFAULT_INPUT_FILE = "data/data.csv";
+    private static final String DEFAULT_OUTPUT_FILE = "finalReport.csv";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         String filePath = args.length > 0
                 ? args[0]
-                : System.getProperty("config.file", "data/data.csv");
+                : System.getProperty("config.file", DEFAULT_INPUT_FILE);
 
         // 1. Initialize dependencies
         Storage storage = new ShopStorage();
@@ -65,6 +66,6 @@ public class Main {
         // 4. Generate and write report
         ReportGenerator generator = new ReportGeneratorImpl(storage);
         ReportWriter writer = new CsvWriter();
-        writer.write("finalReport.csv", generator.getReport());
+        writer.write(DEFAULT_OUTPUT_FILE, generator.getReport());
     }
 }

@@ -1,28 +1,19 @@
 package core.basesyntax.transaction;
 
 import core.basesyntax.strategy.handler.Operation;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class FruitTransaction {
-
-    private Operation operation;
-    private String fruit;
-    private int quantity;
+    private final Operation operation;
+    private final String fruit;
+    private final int quantity;
 
     public FruitTransaction(String code, String fruit, int quantity) {
         this.operation = Operation.fromCode(code);
         this.fruit = fruit;
         this.quantity = quantity;
-    }
-
-    public Operation getOperation() {
-        return operation;
-    }
-
-    public String getFruit() {
-        return fruit;
-    }
-
-    public int getQuantity() {
-        return quantity;
     }
 }

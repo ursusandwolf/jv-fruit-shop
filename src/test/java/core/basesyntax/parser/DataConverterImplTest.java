@@ -1,11 +1,11 @@
 package core.basesyntax.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.exception.DataProcessingException;
 import core.basesyntax.strategy.handler.Operation;
 import core.basesyntax.transaction.FruitTransaction;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ class DataConverterImplTest {
         assertEquals(1, result.size());
 
         FruitTransaction tx = result.get(0);
-        assertEquals("b", Operation.BALANCE.getCode());
+        assertEquals(Operation.BALANCE, tx.getOperation());
         assertEquals("apple", tx.getFruit());
         assertEquals(10, tx.getQuantity());
     }
@@ -59,27 +59,22 @@ class DataConverterImplTest {
         List<FruitTransaction> result = converter.convertToTransaction(input).toList();
         FruitTransaction tx = result.get(0);
 
-        assertEquals("b", Operation.BALANCE.getCode());
+        assertEquals(Operation.BALANCE, tx.getOperation());
         assertEquals("apple", tx.getFruit());
         assertEquals(10, tx.getQuantity());
     }
 
     @Test
-    void convert_ShouldBeParseError_WhenQuantityInvalid() {
-        List<String> errors = new ArrayList<>();
-        Stream<String> input = Stream.of("b,apple,ten"); //Parse error at line 1
-        List<FruitTransaction> result
-                = converter.convertToTransaction(input, errors::add).toList();
-        assertTrue(errors.get(0).contains("Parse error"));
+    void convert_ShouldThrowException_WhenQuantityInvalid() {
+        Stream<String> input = Stream.of("b,apple,ten");
+        assertThrows(DataProcessingException.class, () -> 
+                converter.convertToTransaction(input).toList());
     }
 
     @Test
-    void convert_ShouldBeParseError_WhenColumnsMissing() {
-        List<String> errors = new ArrayList<>();
-        Stream<String> input = Stream.of("b,apple"); //Malformed CSV at line
-        List<FruitTransaction> result
-                = converter.convertToTransaction(input, errors::add).toList();
-        assertTrue(errors.get(0).contains("Malformed CSV at line"));
+    void convert_ShouldThrowException_WhenColumnsMissing() {
+        Stream<String> input = Stream.of("b,apple");
+        assertThrows(DataProcessingException.class, () -> 
+                converter.convertToTransaction(input).toList());
     }
-
 }

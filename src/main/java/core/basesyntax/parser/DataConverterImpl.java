@@ -1,5 +1,6 @@
 package core.basesyntax.parser;
 
+import core.basesyntax.exception.DataProcessingException;
 import core.basesyntax.transaction.FruitTransaction;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,10 +45,11 @@ public class DataConverterImpl implements DataConverter {
             return Optional.of(new FruitTransaction(code, fruit, quantity));
 
         } catch (NumberFormatException e) {
-            errorHandler.accept("Parse error at line " + lineNumber + ": " + line);
+            throw new DataProcessingException("Parse error at line "
+                    + lineNumber + ": " + line, e);
         } catch (Exception e) {
-            errorHandler.accept("Malformed CSV at line " + lineNumber + ": " + line);
+            throw new DataProcessingException("Malformed CSV at line "
+                    + lineNumber + ": " + line, e);
         }
-        return Optional.empty();
     }
 }
